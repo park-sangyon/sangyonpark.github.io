@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SparkEng — Mechanical Engineering Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     TOKENS
+     ============================================================ */
+  :root{
+    --paper: #efeee8;
+    --paper-card: #e7e5dd;
+    --ink: #1b1e22;
+    --ink-soft: #565d64;
+    --line: #c6cbd1;
+    --line-strong: #9aa1a9;
+    --yellow: #e8a93d;
+    --steel: #45677a;
+
+    --font-display: 'Archivo', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'IBM Plex Sans', sans-serif;
+
+    --max: 980px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    margin: 0;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 34px 34px;
+    background-position: -1px -1px;
+    background-attachment: fixed;
+    opacity: 1;
+  }
+  body::before{ content:''; } /* placeholder to keep specificity flat */
+
+  /* faint the grid so it reads as texture, not a spreadsheet */
+  body{
+    background-image:
+      linear-gradient(rgba(198,203,209,0.55) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(198,203,209,0.55) 1px, transparent 1px);
+  }
+
+  a{ color: var(--steel); }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline: 2px solid var(--yellow);
+    outline-offset: 2px;
+  }
+
+  .wrap{
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 28px 20px 100px;
+  }
+
+  /* ============================================================
+     TITLE BLOCK  (styled after an engineering drawing title block)
+     ============================================================ */
+  .titleblock{
+    border: 1.5px solid var(--ink);
+    background: var(--paper-card);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 8px;
+  }
+  .tb-cell{
+    padding: 12px 16px;
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+  }
+  .tb-cell:nth-child(-n+3){ border-top: none; }
+  .tb-cell:nth-child(3n+1){ border-left: none; }
+  .tb-label{
+    display:block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .tb-value{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .tb-name-row{
+    grid-column: 1 / -1;
+    padding: 22px 20px 14px;
+    border-left: none;
+    border-top: none;
+  }
+  .tb-name{
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(34px, 6vw, 58px);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  .tb-tagline{
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--steel);
+  }
+
+  nav.tb-nav{
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--line-strong);
+    padding: 10px 20px;
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+  nav.tb-nav a{ color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+  nav.tb-nav a:hover{ border-bottom-color: var(--yellow); }
+
+  @media (max-width: 640px){
+    .titleblock{ grid-template-columns: 1fr 1fr; }
+    .tb-cell:nth-child(3n+1){ border-left: 1px solid var(--line-strong); }
+    .tb-cell:nth-child(2n+1){ border-left: none; }
+    .tb-cell:nth-child(-n+2){ border-top: none; }
+    .tb-cell:nth-child(n+3){ border-top: 1px solid var(--line-strong); }
+  }
+
+  /* ============================================================
+     DIMENSION-LINE SECTION DIVIDER
+     ============================================================ */
+  .dim-divider{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 64px 0 30px;
+  }
+  .dim-divider .tick{
+    width: 1px; height: 14px;
+    background: var(--line-strong);
+    flex-shrink: 0;
+  }
+  .dim-divider .line{
+    flex: 1;
+    height: 1px;
+    background: var(--line-strong);
+  }
+  .dim-divider .label{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  section{ scroll-margin-top: 24px; }
+
+  h2.section-title{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(22px, 3vw, 30px);
+    margin: 0 0 20px;
+  }
+
+  /* ============================================================
+     ABOUT
+     ============================================================ */
+  .about-grid{
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+  }
+  .about-grid p{ margin: 0 0 14px; max-width: 54ch; }
+  .specs{
+    border-left: 2px solid var(--yellow);
+    padding-left: 18px;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
+  .spec-label{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display: block;
+  }
+  .spec-value{ font-size: 14px; }
+  @media (max-width: 700px){ .about-grid{ grid-template-columns: 1fr; } }
+
+  /* ============================================================
+     GALLERY / FIGURE PLATES
+     ============================================================ */
+.gallery{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 26px;
+}
+.plate{
+  background: var(--paper-card);
+  border: 1px solid var(--line-strong);
+  padding: 10px 10px 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rise 0.5s ease forwards;
+  flex: 1 1 240px;
+  max-width: 480px;
+  transition: flex-grow 0.4s ease;
+}
+  .plate:nth-child(2){ animation-delay: 0.05s; }
+  .plate:nth-child(3){ animation-delay: 0.1s; }
+  .plate:nth-child(4){ animation-delay: 0.15s; }
+  .plate:nth-child(5){ animation-delay: 0.2s; }
+  .plate:nth-child(6){ animation-delay: 0.25s; }
+  @keyframes rise{ to{ opacity: 1; transform: none; } }
+
+  .plate-frame{
+    position: relative;
+    border: 1px solid var(--ink);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #dedcd3;
+    isolation: isolate;
+  }
+  .plate-frame img,
+  .plate-frame video{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .plate:hover .plate-frame img,
+  .plate:hover .plate-frame video{ transform: scale(1.035); }
+  .plate-frame::after{
+    content: '';
+    position: absolute; top: 6px; left: 6px;
+    width: 8px; height: 8px;
+    border-top: 1.5px solid var(--yellow);
+    border-left: 1.5px solid var(--yellow);
+  }
+  .plate-frame .noimg{
+    width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align:center;
+    padding: 12px;
+  }
+
+  /* carousel controls — only shown when a panel has more than one item */
+  .plate-nav{
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(27,30,34,0.0);
+    border: none;
+    cursor: pointer;
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    transition: background 0.15s ease;
+    padding: 0;
+  }
+  .plate-nav:hover{ background: rgba(27,30,34,0.35); }
+  .plate-nav.prev{ left: 0; }
+  .plate-nav.next{ right: 0; }
+  .plate-counter{
+    position: absolute;
+    top: 6px; right: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--paper);
+    background: rgba(27,30,34,0.55);
+    padding: 2px 6px;
+  }
+  .plate-dots{
+    position: absolute;
+    bottom: 6px; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+  .plate-dots .dot{
+    width: 5px; height: 5px;
+    background: rgba(239,238,232,0.55);
+  }
+  .plate-dots .dot.active{ background: var(--yellow); }
+
+  .fig-tag{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--steel);
+    margin: 10px 0 3px;
+    display:block;
+  }
+  .fig-caption{
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 2px;
+  }
+  .fig-sub{
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* ============================================================
+     SKILLS
+     ============================================================ */
+  .skill-group{ margin-bottom: 22px; }
+  .skill-group h3{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 10px;
+    font-weight: 500;
+  }
+  .chips{ display:flex; flex-wrap: wrap; gap: 8px; }
+  .chip{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    padding: 6px 12px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-card);
+  }
+
+  /* ============================================================
+     CONTACT / FOOTER TITLE BLOCK
+     ============================================================ */
+  .contact-block{
+    border: 1.5px solid var(--ink);
+    background: var(--paper-card);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .contact-block .tb-cell{ padding: 16px; }
+  .contact-block .tb-value a{ text-decoration: none; }
+  .contact-block .tb-value a:hover{ text-decoration: underline; }
+  @media (max-width: 700px){
+    .contact-block{ grid-template-columns: 1fr 1fr; }
+    .contact-block .tb-cell:nth-child(3),
+    .contact-block .tb-cell:nth-child(4){ border-top: 1px solid var(--line-strong); }
+  }
+
+  .footer-note{
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 18px;
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============================================================
+       TITLE BLOCK — edit the values below to personalize
+       ============================================================ -->
+  <header class="titleblock">
+    <div class="tb-name-row">
+      <h1 class="tb-name">Sangyon Park</h1>
+      <div class="tb-tagline">Mechanical Engineer — Design · Analysis · Manufacturing </div>
+    </div>
+    <div class="tb-cell">
+      <span class="tb-label">Based in</span>
+      <span class="tb-value">Pittsburgh, PA</span>
+    </div>
+    <div class="tb-cell">
+      <span class="tb-label">Focus</span>
+      <span class="tb-value">Mechanical Design</span>
+    </div>
+    
+    <div class="tb-cell">
+      <span class="tb-label">Rev.</span>
+      <span class="tb-value">A — 2026</span>
+    </div>
+    <nav class="tb-nav">
+      <a href="#about">01 About</a>
+      <a href="#work">02 Projects</a>
+      <a href="#skills">03 Skills</a>
+      <a href="#contact">04 Contact</a>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section id="about">
+    <div class="dim-divider"><div class="tick"></div><div class="line"></div><span class="label">01 — About</span><div class="line"></div><div class="tick"></div></div>
+    <div class="about-grid">
+      <div>
+        <p style="line-height: 1.8;">I am an engineer who enjoys turning ideas into real-life creations. I enjoy crafting and building things with my own hands, especially when they can be useful in everyday life. Whether I am designing something for myself or making something meaningful for friends and family, I find satisfaction in creating with purpose.</p>
+        <p style="line-height: 1.8;">Engineering gives me the tools to turn imagination into practical solutions. I am always looking for new ways to combine creativity, engineering, and craftsmanship into something meaningful. Through innovation, design, and experimentation, I hope to create things that can impact the world.</p>
+      </div>
+      <div class="specs">
+          <div><span class="spec-label">Education</span><span class="spec-value">Duke University<p>B.S. Mechanical Engineering<br>Minor/Certificate: Aerospace Engineering</p></span></div>
+        <div><span class="spec-label">Relevant Courses</span><span class="spec-value">Thermodynamics, Mechanics of Solids, Multivariable Calculus, Physics of Mechanics, Physics of Electricity and Magnetism</span></div>
+        <div><span class="spec-label">Currently</span><span class="spec-value">Student, Co-Founder, Open to Opportunities</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECTS / GALLERY
+       This is the flexible part — see the PHOTOS array in the
+       script at the bottom. Add, remove, or reorder entries there
+       and the grid below updates automatically.
+       ============================================================ -->
+  <section id="work">
+    <div class="dim-divider"><div class="tick"></div><div class="line"></div><span class="label">02 — Projects</span><div class="line"></div><div class="tick"></div></div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS
+       ============================================================ -->
+  <section id="skills">
+    <div class="dim-divider"><div class="tick"></div><div class="line"></div><span class="label">03 — Skills</span><div class="line"></div><div class="tick"></div></div>
+
+    <div class="skill-group">
+      <h3>Design &amp; CAD</h3>
+      <div class="chips">
+        <span class="chip">SolidWorks</span><span class="chip">Fusion 360</span><span class="chip">KiCAD</span><span class="chip">Adobe Illustrator</span>
+        <span class="chip">CorelDraw</span><span class="chip">Adobe Photoshop</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h3>Analysis</h3>
+      <div class="chips">
+        <span class="chip">FEA (ANSYS)</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h3>Manufacturing</h3>
+      <div class="chips">
+        <span class="chip">CNC Machining(Wood)</span><span class="chip">3D Printing</span><span class="chip">Soldering</span>
+        <span class="chip">Woodworking</span><span class="chip">Metalworking</span><span class="chip">Laser Engraving/Cutting</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h3>Programming</h3>
+      <div class="chips">
+        <span class="chip">Java</span>
+        <span class="chip">Arduino / Embedded</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h3>Soon To Be Learned</h3>
+      <div class="chips">
+        <span class="chip">MATLAB</span><span class="chip">Python</span>
+        <span class="chip">LaTeX</span><span class="chip">Welding</span><span class="chip">CFD Analysis</span><span class="chip">Thermal Analysis</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section id="contact">
+    <div class="dim-divider"><div class="tick"></div><div class="line"></div><span class="label">04 — Contact</span><div class="line"></div><div class="tick"></div></div>
+    <div class="contact-block">
+      <div class="tb-cell"><span class="tb-label">Email (   Personal / School )</span><span class="tb-value"><a href="mailto:you@example.com">psangyon07@gmail.com<br>sp802@duke.edu</a></span></div>
+      <div class="tb-cell"><span class="tb-label">Phone</span><span class="tb-value">(412) 613-8840</span></div>
+      <div class="tb-cell"><span class="tb-label">LinkedIn</span><span class="tb-value"><a href="#">/in/sangyon-park-977239338</a></span></div>
+      <div class="tb-cell"><span class="tb-label">Location</span><span class="tb-value">Pittsburgh, PA</span></div>
+    </div>
+    <div class="footer-note">SHEET 1 OF 1   —   DRAWN BY SANGYON PARK   —   REV A</div>
+  </section>
+
+</div>
+
+<script>
+/* ================================================================
+   PHOTOS — this is where you add your work.
+   Add as many panels as you like, in any order. Each panel needs:
+
+     items:   a LIST of one or more media items for that panel.
+              Each item is { type: "image" or "video", src: "..." }.
+              - One item  -> shows as a normal single photo/video.
+              - Several   -> shows as a mini carousel with arrows,
+                             a counter, and dots, so one panel can
+                             hold a whole sequence of photos (or a
+                             mix of photos and a video).
+              "src" can be a URL, or a local file path like
+              "images/bracket.jpg" / "videos/test-run.mp4" if you
+              keep files in folders next to this file.
+     tag:     a short label, e.g. "Fig. 01"
+     caption: the main caption (bold line)
+     sub:     an optional smaller line underneath (material,
+              process, date — whatever's useful). Leave as ""
+              if you don't need it.
+
+   To add a panel: copy one whole { ... } block below, paste it,
+   and change the values. To add another photo to an existing
+   panel, just add another { type: ..., src: ... } line inside its
+   items list. To remove a panel, delete its block.
+   You can also just ask Claude to add or edit entries for you.
+================================================================ */
+const PHOTOS = [
+  {
+    items: [
+      { type: "image", src: "images/pcb-holding-board.jpg" },
+      { type: "image", src: "images/pcb-component-macro.jpg" },
+      { type: "image", src: "images/pcb-batch-populated.jpg" },
+      { type: "image", src: "images/pcb-kicad-layout.jpg" },
+      { type: "image", src: "images/vbt-imu-signals-graph.jpg" },
+      { type: "image", src: "images/load-velocity-profile-graph.jpg" },
+      { type: "image", src: "images/vbt-design-notes-triangles.jpg" }
+    ],
+    tag: "Fig. 01",
+    caption: "Creation of Tachyon",
+    /***************FOR REVIEW***************/
+    sub: "Building an exercise monitor using Velocity-Based Training for athletes to enhance performance  "
+  },
+  {
+    items: [
+      { type: "image", src: "images/drone-parts-layout.jpg" },
+      { type: "image", src: "images/drone-esc-board.jpg" },
+      { type: "image", src: "images/drone-frame-assembled.jpg" },
+      { type: "image", src: "images/gripper-mechanism-3dprint.jpg" },
+      { type: "image", src: "images/drone-desk-setup.jpg" }
+    ],
+    tag: "Fig. 02",
+    caption: "FPV Drone Build",
+    sub: "Pennsylvania 3rd place & National qualifier"
+  },
+  {
+    items: [
+      { type: "image", src: "images/rubber-band-plane-1.jpg" },
+      { type: "image", src: "images/rubber-band-plane-2.jpg" },
+      { type: "image", src: "images/rubber-band-plane-wing-detail.jpg" },
+      { type: "image", src: "images/rubber-band-plane-3.jpg" }
+    ],
+    tag: "Fig. 03",
+    caption: "Rubber Band-Powered Model Airplanes",
+    sub: "Each for a different year | 3rd @ Nationals & Twice National Qualifier"
+  },
+  {
+    items: [
+      { type: "image", src: "images/engine-teardown.jpg" },
+      { type: "image", src: "images/scale-model-v8.jpg" },
+      { type: "image", src: "images/hardware-screw-scale.jpg" }
+    ],
+    tag: "Fig. 04",
+    caption: "Engines",
+    sub: "Complete V1 disassembly & Miniature V8 assembly"
+  },
+  {
+    items: [
+      { type: "image", src: "images/derby-f1-side1.jpg" },
+      { type: "image", src: "images/derby-f1-side2.jpg" },
+      { type: "image", src: "images/derby-f1-front.jpg" },
+      { type: "image", src: "images/derby-f1-top.jpg" },
+      { type: "image", src: "images/derby-f1-nose.jpg" },
+      { type: "image", src: "images/derby-f1-display-case.jpg" },
+      { type: "image", src: "images/derby-halloween-painting.jpg" },
+      { type: "image", src: "images/derby-halloween-track.jpg" },
+      { type: "image", src: "images/derby-purple-rocket-side.jpg" },
+      { type: "image", src: "images/derby-purple-rocket-front.jpg" },
+      { type: "image", src: "images/cad-derby-car-model.jpg" },
+      { type: "image", src: "images/derby-lineup-red03.jpg" },
+      { type: "image", src: "images/derby-design-sketch.jpg" }
+    ],
+    tag: "Fig. 05",
+    caption: "Dragster Design",
+    sub: "Each for a different year | 17th @ Nationals & Twice National Qualifier"
+  },
+  {
+    items: [
+      { type: "image", src: "images/knife-finished-scales.jpg" },
+      { type: "image", src: "images/knife-handle-joint.jpg" },
+      { type: "image", src: "images/knife-wrapped-2.jpg" },
+      { type: "image", src: "images/knife-wood-blanks.jpg" },
+      { type: "image", src: "images/mini-katana-stand.jpg" },
+      { type: "image", src: "images/mini-knife-stand-scale.jpg" },
+      { type: "image", src: "images/knife-tape-wrap.jpg" },
+      { type: "image", src: "images/knife-rope-wrap.jpg" },
+      { type: "image", src: "images/knife-handle-blank.jpg" },
+      { type: "image", src: "images/knife-blade-blank.jpg" },
+      { type: "image", src: "images/knife-paracord-grip.jpg" }
+    ],
+    tag: "Fig. 06",
+    caption: "Handmade Knives",
+    sub: "Knives made throughout my life for family, friends, & personal crafting"
+  },
+  {
+    items: [
+      { type: "image", src: "images/wood-dock-holder.jpg" },
+      { type: "image", src: "images/display-case-golfball.jpg" },
+      { type: "video", src: "videos/keepsake-clip.mp4" }
+    ],
+    tag: "Fig. 07",
+    caption: "Miscellaneous",
+    sub: "Thoroughly handcrafted Gifts | Electrolysis-Powered torch"
+  }
+];
+
+function renderMedia(item, label){
+  if (!item || !item.src) {
+    return `<div class="noimg">Add a ${item && item.type === 'video' ? 'video' : 'image'} URL for<br>"${label}"</div>`;
+  }
+  if (item.type === 'video') {
+    return `<video src="${item.src}" controls preload="metadata" playsinline></video>`;
+  }
+  return `<img src="${item.src}" alt="${label}" loading="lazy">`;
+}
+
+function renderGallery(){
+  const el = document.getElementById('gallery');
+  el.innerHTML = PHOTOS.map((p, pIndex) => {
+    const items = (p.items && p.items.length) ? p.items : [{ type: 'image', src: '' }];
+    const label = (p.caption || 'this figure').replace(/"/g, '&quot;');
+    const multi = items.length > 1;
+
+    const nav = multi ? `
+        <button class="plate-nav prev" data-panel="${pIndex}" data-dir="-1" aria-label="Previous photo">&#8249;</button>
+        <button class="plate-nav next" data-panel="${pIndex}" data-dir="1" aria-label="Next photo">&#8250;</button>
+        <span class="plate-counter" data-counter="${pIndex}">1 / ${items.length}</span>
+        <div class="plate-dots" data-dots="${pIndex}">
+          ${items.map((_, i) => `<span class="dot${i === 0 ? ' active' : ''}"></span>`).join('')}
+        </div>` : '';
+
+    return `
+    <figure class="plate">
+      <div class="plate-frame" data-frame="${pIndex}" data-index="0">
+        ${renderMedia(items[0], label)}
+        ${nav}
+      </div>
+      <span class="fig-tag">${p.tag || ''}</span>
+      <figcaption class="fig-caption">${p.caption || ''}</figcaption>
+      ${p.sub ? `<p class="fig-sub">${p.sub}</p>` : ''}
+    </figure>`;
+  }).join('');
+}
+renderGallery();
+
+// carousel navigation — handles clicks on the prev/next arrows above
+document.getElementById('gallery').addEventListener('click', (e) => {
+  const btn = e.target.closest('.plate-nav');
+  if (!btn) return;
+
+  const pIndex = Number(btn.dataset.panel);
+  const dir = Number(btn.dataset.dir);
+  const panel = PHOTOS[pIndex];
+  const items = panel.items;
+  const frame = document.querySelector(`.plate-frame[data-frame="${pIndex}"]`);
+  let current = Number(frame.dataset.index);
+
+  current = (current + dir + items.length) % items.length;
+  frame.dataset.index = current;
+
+  const label = (panel.caption || 'this figure').replace(/"/g, '&quot;');
+  const nav = frame.querySelector('.plate-nav.prev').outerHTML
+            + frame.querySelector('.plate-nav.next').outerHTML
+            + frame.querySelector('.plate-counter').outerHTML
+            + frame.querySelector('.plate-dots').outerHTML;
+
+  frame.innerHTML = renderMedia(items[current], label) + nav;
+  frame.querySelector('.plate-counter').textContent = `${current + 1} / ${items.length}`;
+  frame.querySelectorAll('.plate-dots .dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === current);
+  });
+});
+</script>
+
+</body>
+</html>
